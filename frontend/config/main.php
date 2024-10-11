@@ -21,7 +21,6 @@ return [
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
         ],
         'log' => [
@@ -36,14 +35,17 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'tour' => 'tour/index',
+                'tour/create' => 'tour/create',
+                'tour/update/<id:\d+>' => 'tour/update',
+                'tour/view/<id:\d+>' => 'tour/view',
+                'tour/delete/<id:\d+>' => 'tour/delete',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
