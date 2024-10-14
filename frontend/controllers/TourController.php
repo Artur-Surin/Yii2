@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use Yii;
 use app\models\Tour;
 use app\models\TourSearch;
 use yii\web\Controller;
@@ -9,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * TourController implements the CRUD actions for Tour model.
+ * TourController implements the CRUD actions for Tours model.
  */
 class TourController extends Controller
 {
@@ -32,24 +33,29 @@ class TourController extends Controller
     }
 
     /**
-     * Lists all Tour models.
+     * Lists all Tours models.
      *
      * @return string
      */
     public function actionIndex()
     {
         $searchModel = new TourSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        // Загрузите туры с ценами
+        $tours = Tour::find()->with('tourPrice')->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'tours' => $tours,
         ]);
     }
 
+
     /**
-     * Displays a single Tour model.
-     * @param int $id
+     * Displays a single Tours model.
+     * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -61,7 +67,7 @@ class TourController extends Controller
     }
 
     /**
-     * Creates a new Tour model.
+     * Creates a new Tours model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
@@ -83,9 +89,9 @@ class TourController extends Controller
     }
 
     /**
-     * Updates an existing Tour model.
+     * Updates an existing Tours model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id
+     * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -103,9 +109,9 @@ class TourController extends Controller
     }
 
     /**
-     * Deletes an existing Tour model.
+     * Deletes an existing Tours model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id
+     * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -117,9 +123,9 @@ class TourController extends Controller
     }
 
     /**
-     * Finds the Tour model based on its primary key value.
+     * Finds the Tours model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id
+     * @param int $id ID
      * @return Tour the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */

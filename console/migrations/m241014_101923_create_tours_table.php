@@ -5,12 +5,12 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%tours}}`.
  */
-class m241011_092656_create_tours_table extends Migration
+class m241014_101923_create_tours_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
-    public function up()
+    public function safeUp()
     {
         $this->createTable('tours', [
             'id' => $this->primaryKey(),
@@ -24,9 +24,11 @@ class m241011_092656_create_tours_table extends Migration
         ]);
     }
 
-    public function down()
+    /**
+     * {@inheritdoc}
+     */
+    public function safeDown()
     {
         $this->dropTable('tours');
     }
 }
-

@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="tour-search">
+<div class="tours-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
