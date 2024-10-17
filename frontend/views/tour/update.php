@@ -3,19 +3,21 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var app\models\Tours $model */
+/** @var app\models\Tour $tourModel */
+/** @var app\models\TourPrice $priceModel */
 
-$this->title = 'Update Tours: ' . $model->title;
+$this->title = 'Update Tour: ' . $tourModel->title;
 $this->params['breadcrumbs'][] = ['label' => 'Tours', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $tourModel->title, 'url' => ['view', 'id' => $tourModel->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="tours-update">
+<div class="tour-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
-        'model' => $model,
+        'tourModel' => $tourModel,
+        'priceModel' => $priceModel,
     ]) ?>
 
 </div>

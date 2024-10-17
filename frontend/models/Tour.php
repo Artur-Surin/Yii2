@@ -15,6 +15,8 @@ use yii\behaviors\TimestampBehavior;
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $deleted_at
+ * @property TourPrice $tourPrice
+ * @property float $calculatePrice
  */
 class Tour extends \yii\db\ActiveRecord
 {
@@ -41,7 +43,6 @@ class Tour extends \yii\db\ActiveRecord
     {
         return [
             [['description'], 'string'],
-            [['price'], 'number'],
             [['created_at', 'updated_at', 'deleted_at'], 'integer'],
             [['alias', 'title'], 'string', 'max' => 255],
         ];
@@ -58,6 +59,7 @@ class Tour extends \yii\db\ActiveRecord
             'title' => 'Title',
             'description' => 'Description',
             'price' => 'Price',
+            'calculatePrice' => 'Price',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
@@ -67,6 +69,11 @@ class Tour extends \yii\db\ActiveRecord
     public function getTourPrice()
     {
         return $this->hasOne(TourPrice::class, ['tour_id' => 'id']);
+    }
+
+    public function getCalculatePrice()
+    {
+        return $this->tourPrice->price_adult_sale ?? $this->tourPrice->price_adult;
     }
 
 }

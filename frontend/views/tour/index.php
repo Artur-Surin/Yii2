@@ -29,18 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'alias',
             'title',
             'description',
-            [
-                'label' => 'Price',
-                'value' => function ($model) {
-                    $price = $model->tourPrice;
-                    if ($price) {
-                        return $price->price_adult_sale ?: $price->price_adult;
-                    }
-                    return $model->price; // Если цена не найдена
-                },
-            ],
+            'calculatePrice',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 </div>
+
+

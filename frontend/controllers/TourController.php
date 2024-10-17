@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\TourPrice;
 use Yii;
 use app\models\Tour;
 use app\models\TourSearch;
@@ -42,13 +43,9 @@ class TourController extends Controller
         $searchModel = new TourSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        // Загрузите туры с ценами
-        $tours = Tour::find()->with('tourPrice')->all();
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'tours' => $tours,
         ]);
     }
 
@@ -73,18 +70,29 @@ class TourController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Tour();
+        $tourModel = new Tour();
+        $priceModel = new TourPrice();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+
+            $tourModel->load(Yii::$app->request->post());
+            $priceModel->load(Yii::$app->request->post());
+
+            if ($tourModel->validate() && $tourModel->save()) {
+
+                $priceModel->tour_id = $tourModel->id;
+
+                if ($priceModel->validate() && $priceModel->save()) {
+                    return $this->redirect(['view', 'id' => $tourModel->id]);
+                } else {
+                    $tourModel->delete();
+                }
             }
-        } else {
-            $model->loadDefaultValues();
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'tourModel' => $tourModel,
+            'priceModel' => $priceModel,
         ]);
     }
 
@@ -97,14 +105,25 @@ class TourController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $tourModel = $this->findModel($id);
+        $priceModel = $tourModel->tourPrice ?: new TourPrice();
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+            $tourModel->load(Yii::$app->request->post());
+            $priceModel->load(Yii::$app->request->post());
+
+            if ($tourModel->validate() && $tourModel->save()) {
+                $priceModel->tour_id = $tourModel->id;
+
+                if ($priceModel->validate() && $priceModel->save()) {
+                    return $this->redirect(['view', 'id' => $tourModel->id]);
+                }
+            }
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'tourModel' => $tourModel,
+            'priceModel' => $priceModel,
         ]);
     }
 

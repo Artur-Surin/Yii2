@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var app\models\Tours $model */
+/** @var app\models\Tour $model */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Tours', 'url' => ['index']];
@@ -33,10 +33,26 @@ $this->params['breadcrumbs'][] = $this->title;
             'alias',
             'title',
             'description:ntext',
-            'price',
-            'created_at',
-            'updated_at',
+            'calculatePrice',
+
+            [
+                'attribute' => 'created_at',
+                'format' => ['date', 'php:d-m-Y H:i:s'],
+            ],
+
+            [
+                'attribute' => 'updated_at',
+                'format' => 'datetime',
+            ],
+
             'deleted_at',
+            [
+                'label' => 'test',
+                'format' => 'image',
+                'value' => function () {
+                    return 'https://www.shutterstock.com/image-photo/adult-education-student-taking-math-600w-2142817965.jpg';
+                }
+            ],
         ],
     ]) ?>
 

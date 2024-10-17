@@ -2,73 +2,46 @@
 
 namespace app\models;
 
-use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Tour;
 
-/**
- * TourSearch represents the model behind the search form of `app\models\Tour`.
- */
 class TourSearch extends Tour
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $price;
+
     public function rules()
     {
         return [
-            [['id', 'created_at', 'updated_at', 'deleted_at'], 'integer'],
-            [['alias', 'title', 'description'], 'safe'],
+            [['id'], 'integer'],
+            [['title', 'alias'], 'safe'],
             [['price'], 'number'],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function scenarios()
-    {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
-    }
-
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
-        $query = Tour::find();
-
-        // add conditions that should always apply here
+        $query = Tour::find()->joinWith('tourPrice');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'attributes' => [
+                    'title',
+                    'calculatePrice' => [
+                        'asc' => ['COALESCE(tour_prices.price_adult_sale,tour_prices.price_adult)' => SORT_ASC],
+                        'desc' => ['COALESCE(tour_prices.price_adult_sale,tour_prices.price_adult)' => SORT_DESC],
+                    ],
+                ],
+            ],
         ]);
 
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'price' => $this->price,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
-        ]);
-
-        $query->andFilterWhere(['like', 'alias', $this->alias])
-            ->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'description', $this->description]);
+        $query->andFilterWhere(['like', 'title', $this->title]);
 
         return $dataProvider;
     }
